@@ -1,0 +1,23 @@
+.dropdown-menu>li>a:hover,
+/* .dropdown-menu>li>a:focus{color:#FFF;background-color:#357ebd} */
+.dropdown-menu>li>a:focus{text-decoration:none;color:#262626;background-image:-webkit-linear-gradient(top,#428bca 0,#357ebd 100%);background-image:-o-linear-gradient(top,#428bca 0,#357ebd 100%);background-image:linear-gradient(to bottom,#428bca 0,#357ebd 100%);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff428bca', endColorstr='#ff357ebd', GradientType=0);color:#FFF;background-color:#357ebd}
+
+.padding-top-30 {
+  padding-top: 30px;
+}
+
+.modal-footer{
+  background-color: #eee;
+}
+
+.header {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.content-sep{
+  padding-top:30px;
+}
+
+.container{
+  width: 880px;
+}

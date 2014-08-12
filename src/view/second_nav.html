@@ -1,0 +1,57 @@
+<div class="bg-success">
+<nav class="navbar nav-pills second_navigator" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!--<a class="navbar-brand" href="#">Brand</a>-->
+      <a class="navbar-brand" href="#"><img src="/static/favicon.ico">游戏圈</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="/">首页</a></li>
+        {% if account %}
+          <li><a href="/account/{{ account.id }}">我的主页</a></li>
+        {% endif %}
+        <li><a href="#">浏览发现</a></li>
+        <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="#">Action</a></li>
+          <li><a href="#">Another action</a></li>
+          <li><a href="#">Something else here</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Separated link</a></li>
+          <li class="divider"></li>
+          <li><a href="#">One more separated link</a></li>
+        </ul>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-right" role="search">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <input type="text" class="form-control" placeholder="搜索你感兴趣的内容或人...">
+            <button type="button" class="btn btn-info">
+              <i class="fa fa-search fa-fw"></i>
+            </button>
+          </span>
+        </div>
+        <!--
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="搜索你感兴趣的内容或人">
+        </div>
+        <button type="submit" class="btn btn-default">搜索</button>
+        -->
+      </form>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+</div>

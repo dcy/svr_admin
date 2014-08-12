@@ -1,0 +1,2 @@
+-module(history, [Id, AccountId, What, Time]).
+-compile(export_all).

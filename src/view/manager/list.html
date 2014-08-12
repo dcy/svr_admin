@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}服务器管理{% endblock %}
+
+{% block mycss %}
+  <link href="http://cdn.bootcss.com/bootstrap-modal/2.2.5/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
+  <link href="http://cdn.bootcss.com/bootstrap-modal/2.2.5/css/bootstrap-modal.css" rel="stylesheet">
+{% endblock %}
+
+{% block myjs %}
+  <script src="http://cdn.bootcss.com/bootstrap-modal/2.2.5/js/bootstrap-modal.min.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap-modal/2.2.5/js/bootstrap-modalmanager.min.js"></script>
+  <script src="/static/js/manager.js"></script>
+  <script src="/static/js/login_modal.js"></script>
+  <script src="/static/js/change_password.js"></script>
+  <script>
+$(document).ready(handle_manager);
+$(document).ready(validate_and_login);
+$(document).ready(validate_and_change);
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="container content-sep">
+    <div class="col-sm-4">
+      <div id="errorMsg" class="bg-danger">
+      </div>
+      <div class="btn-group-vertical">
+        <button id="reload_confs" class="btn btn-primary" data-loading-text="热更中...">热更配置</button>
+        <button id="reload_svr" class="btn btn-primary" data-loading-text="热更中...">热更整服</button>
+        <button id="reboot_svr" class="btn btn-primary disabled">重启服务器</button>
+      </div>
+    </div>
+    <div class="col-sm-8">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">最近操作历史</h3>
+        </div>
+        <div class="panel-body">
+          <ul class="list-unstyle">
+          {% for history in histories %}
+            <li>
+              <span class="text-primary">{{ history.who }} </span>
+              <span class="text-success">{{ history.time|date:"于Y-m-d H-i-s" }} </span>
+              <span class="text-warning">{{ history.what }}</span>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    {% include "account/login_modal.html" %}
+    {% include "account/change_password.html" %}
+  </div>
+{% endblock %}

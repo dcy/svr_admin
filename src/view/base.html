@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}游戏圈{% endblock %}</title>
+
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href="http://cdn.bootcss.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap-validator/0.5.0/css/bootstrapValidator.min.css" rel="stylesheet">
+
+    <!-- mycss -->
+    <link href="/static/css/base.css" rel="stylesheet">
+    <link href="/static/css/sticky-footer.css" rel="stylesheet">
+    {% block mycss %}{% endblock %}
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  <div id="svr-data" data-is_login={% if account %} true {% else %} false {% endif %}>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      {% block top_nav %}
+        {% include "top_nav.html" %}
+      {% endblock %}
+    </div>
+    <div class="row">
+      {% block content %}{% endblock %}
+
+      {% block footer %}
+        {% include "footer.html" %}
+      {% endblock %}
+
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+      <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+      <!-- Include all compiled plugins (below), or include individual files as needed -->
+      <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+      <script src="http://cdn.bootcss.com/bootstrap-validator/0.5.0/js/bootstrapValidator.js"></script>
+      <script src="http://cdn.bootcss.com/bootstrap-validator/0.5.0/js/language/zh_CN.js"></script>
+      {% block myjs %}{% endblock %}
+    </div>
+  </div>
+  </body>
+</html>
