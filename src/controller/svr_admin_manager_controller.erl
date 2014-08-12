@@ -19,7 +19,7 @@ reload_confs('POST', []) ->
                      os:cmd(MakeCmd),
                      {ok, TheSvrNode} = application:get_env(svr_admin, the_svr_node),
                      reload(TheSvrNode, data_confs),
-                     History = history:new(id, get_db_id(Req:cookie("account_id")), ?MANAGER_RELOAD_CONFS, calendar:local_time()),
+                     History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_CONFS, calendar:local_time()),
                      History:save(),
                      "success" 
              end,
@@ -37,7 +37,7 @@ reload_svr('POST', []) ->
                      os:cmd(MakeCmd),
                      {ok, TheSvrNode} = application:get_env(svr_admin, the_svr_node),
                      reload(TheSvrNode, all),
-                     History = history:new(id, get_db_id(Req:cookie("account_id")), ?MANAGER_RELOAD_SVR, calendar:local_time()),
+                     History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_SVR, calendar:local_time()),
                      History:save(),
                      "success" 
              end,
@@ -67,12 +67,11 @@ get_db_id(Id) ->
     erlang:list_to_integer(DbIdStr).
 
 get_recent_histories() ->
-    HistoriesObj = boss_db:find(history, [], [{order_by, time}, {descending, true}]),
-    [[{who, get_name(History:account_id())}, {what, get_what(History:what())}, {time, History:time()}] || History <- HistoriesObj].
+    HistoriesObj = boss_db:find(history, [], [{limit, 20}, {order_by, time}, {descending, true}]),
+    [[{who, History:who()}, {what, get_what(History:what())}, {time, History:time()}] || History <- HistoriesObj].
 
-%todo:数据库中存名字
 get_name(AccountId) ->
-    Account = boss_db:find("account-" ++ erlang:integer_to_list(AccountId)),
+    Account = boss_db:find(AccountId),
     Account:name().
 
 get_what(What) ->

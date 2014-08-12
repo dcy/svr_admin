@@ -1,2 +1,2 @@
--module(history, [Id, AccountId, What, Time]).
+-module(history, [Id, Who, What, Time]).
 -compile(export_all).
