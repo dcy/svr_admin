@@ -1,0 +1,2 @@
+-module(crash, [Id, Host, Port, AccId, AccName, Uid, Nick, Stacktrace, Time]).
+-compile(export_all).

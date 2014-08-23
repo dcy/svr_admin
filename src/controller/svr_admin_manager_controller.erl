@@ -43,6 +43,11 @@ reload_svr('POST', []) ->
              end,
     {json, [{result, Result}]}.
 
+crash('GET', []) ->
+    Account = account_lib:is_login_cookie(Req),
+    Crashes = boss_db:find(crash, []),
+    {ok, [{account, Account}, {crashes, Crashes}]}.
+
 is_the_svr_live() ->
     {ok, TheSvrNode} = application:get_env(svr_admin, the_svr_node),
     net_kernel:connect_node(TheSvrNode).

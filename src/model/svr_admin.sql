@@ -15,6 +15,20 @@ CREATE TABLE `accounts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+DROP TABLE IF EXISTS `crashes`;
+CREATE TABLE `crashes` (
+  `id` int(11) NOT NULL,
+  `host` varchar(36) NOT NULL,
+  `port` int(11) NOT NULL,
+  `acc_id` int(11) NOT NULL COMMENT '账号id',
+  `acc_name` varchar(36) NOT NULL COMMENT '账号名字',
+  `uid` bigint(20) NOT NULL COMMENT '角色id',
+  `nick` varchar(36) NOT NULL COMMENT '昵称',
+  `stacktrace` text NOT NULL COMMENT '堆栈',
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 DROP TABLE IF EXISTS `histories`;
 CREATE TABLE `histories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -26,4 +40,4 @@ CREATE TABLE `histories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- 2014-08-12 06:10:43
+-- 2014-08-23 11:44:56
