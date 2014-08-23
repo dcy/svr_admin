@@ -46,11 +46,26 @@ reload_svr('POST', []) ->
 crash('GET', []) ->
     Account = account_lib:is_login_cookie(Req),
     Crashes = boss_db:find(crash, []),
-    {ok, [{account, Account}, {crashes, Crashes}]}.
+    {ok, [{account, Account}, {crashes, Crashes}]};
+
+crash('POST', []) ->
+    Host = Req:post_param("host"),
+    Port = Req:post_param("port"),
+    AccId = Req:post_param("acc_id"),
+    AccName = Req:post_param("acc_name"),
+    Uid = Req:post_param("uid"),
+    Nick = Req:post_param("nick"),
+    Stacktrace = Req:post_param("stacktrace"),
+    Crash = crash:new(id, Host, Port, AccId, AccName, Uid, Nick, Stacktrace, calendar:local_time()),
+    case Crash:save() of
+        {ok, _} -> {json, [{result, "success"}]};
+        _ -> {json, [{result, "fail"}]}
+    end.
 
 is_the_svr_live() ->
     {ok, TheSvrNode} = application:get_env(svr_admin, the_svr_node),
     net_kernel:connect_node(TheSvrNode).
+
 
 
 reload(Node, Modules) ->
