@@ -34,6 +34,7 @@ $(document).ready(validate_and_change);
               <th>账户名</th>
               <th>角色名</th>
               <th>时间</th>
+              <th>dump</th>
               <th>堆栈</th>
             </tr>
           </thead>
@@ -45,6 +46,7 @@ $(document).ready(validate_and_change);
               <td>{{ crash.acc_name }}</td>
               <td>{{ crash.nick }}</td>
               <td>{{ crash.time|date:"Y-m-d H-i-s" }}</td>
+              <td>{{ crash.dump }}</td>
               <td width=360 style="WORD-WRAP: break-word">{{ crash.stacktrace }}</td>
             </tr>
           {% endfor %}
