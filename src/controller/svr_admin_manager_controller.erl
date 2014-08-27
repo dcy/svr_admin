@@ -1,6 +1,7 @@
 -module(svr_admin_manager_controller, [Req]).
 -compile(export_all).
 -include("svr.hrl").
+-include("deps/simple_bridge/include/simple_bridge.hrl").
 
 list('GET', []) ->
     Account = account_lib:is_login_cookie(Req),
@@ -56,7 +57,20 @@ crash('POST', []) ->
     Uid = Req:post_param("uid"),
     Nick = Req:post_param("nick"),
     Stacktrace = Req:post_param("stacktrace"),
-    Crash = crash:new(id, Host, Port, AccId, AccName, Uid, Nick, Stacktrace, calendar:local_time()),
+    Dump = case Req:post_files() of
+               [] ->
+                   ?TRACE_VAR(empty),
+                   "";
+               [FileObj] ->
+                   ?TRACE_VAR(FileObj),
+                   %%todo: size 太大，忽略
+                   #sb_uploaded_file{original_name=OriginalName, temp_file=TempFile} = FileObj,
+                   SourceFile = lists:concat(["priv/static/dump/", OriginalName]),
+                   file:copy(TempFile, SourceFile),
+                   file:delete(TempFile),
+                   OriginalName
+           end,
+    Crash = crash:new(id, Host, Port, AccId, AccName, Uid, Nick, Stacktrace, Dump, calendar:local_time()),
     case Crash:save() of
         {ok, _} -> {json, [{result, "success"}]};
         _ -> {json, [{result, "fail"}]}
