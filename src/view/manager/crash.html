@@ -46,8 +46,8 @@ $(document).ready(validate_and_change);
               <td>{{ crash.acc_name }}</td>
               <td>{{ crash.nick }}</td>
               <td>{{ crash.time|date:"Y-m-d H-i-s" }}</td>
-              <td><a href="/static/dump/{{ crash.dump }}" target="_self">{{ crash.dump }}</a></td>
-              <td width=360 style="WORD-WRAP: break-word">{{ crash.stacktrace }}</td>
+              <td width=200 style="WORD-WRAP: break-word"><a href="/static/dump/{{ crash.dump }}" target="_self">{{ crash.dump }}</a></td>
+              <td width=200 style="WORD-WRAP: break-word">{{ crash.stacktrace }}</td>
             </tr>
           {% endfor %}
           </tbody>
