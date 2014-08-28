@@ -11,7 +11,7 @@
   <script src="http://cdn.bootcss.com/bootstrap-modal/2.2.5/js/bootstrap-modalmanager.min.js"></script>
   <script src="/static/deps/twbs-pagination/jquery.twbsPagination.min.js"></script>
   <script src="/static/js/manager.js?v=0.1"></script>
-  <script src="/static/js/login_modal.js"></script>
+  <script src="/static/js/login_modal.js?v=0.1"></script>
   <script>
 $(document).ready(handle_manager);
 $(document).ready(validate_and_login);
@@ -67,7 +67,7 @@ $(document).ready(validate_and_login);
       <!--
       curl -d "host=192.168.1.111&port=8000&acc_id=1&acc_name=中文&uid=1&nick=中文&stacktrace=中文" "http://rtsgame.eicp.net:8008/manager/crash"
       -->
-      curl -F "dump=@dump_filename" -F host="192.168.1.111" -F port="8000" -F acc_id="1" -F acc_name="name" -F uid="1" -F nick="nick"  -F stacktrace="stacktrace" "http://rtsgame.eicp.net:8008/manager/crash"
+      curl -F "dump=@dump_filename" -F host="192.168.1.111" -F port="8000" -F device="iphone6" -F acc_name="name" -F nick="nick" "http://rtsgame.eicp.net:8008/manager/crash"
     </div>
     <hr />
     <!-- Modal -->
