@@ -6,7 +6,6 @@ function handle_manager(){
         //}, 3000);
     });
 
-
     is_login = $('#svr-data').data("is_login");
     $("#reload_confs").click(function(){
         console.log("reload_confs");
@@ -55,4 +54,46 @@ function handle_manager(){
             $('#loginModal').modal("toggle");
         }
     });
+
+    $('button[delete-crash-id]').click(function () {
+        var crash_id = $(this).attr('delete-crash-id');
+        if (is_login){
+            $.post("/manager/del_crash",
+                   {crash_id: crash_id},
+                   function(data) {
+                       result = data.result;
+                       if (result == "success") {
+                           location.reload();
+                       }
+                   }
+                  )
+        }
+        else {
+            $(this).button('reset');
+            $('#loginModal').modal("toggle");
+        }
+    });
+
+    var total_pages = $('#pageInfo').data('total-pages');
+    console.log("*****total_pages", total_pages);
+
+    var page_num = $('#pageInfo').data('page-num');
+
+
+    $('#pagination').twbsPagination({
+        totalPages: total_pages,
+        visiblePages: 6,
+        startPage: page_num,
+        first: '&laquo;首页',
+        last: '最后&raquo;',
+        prev: '&lsaquo;前一页',
+        next: '后一页&rsaquo;',
+        href: '?page={{number}}',
+        onPageClick: function (event, page) {
+            console.log(page);
+            //url = "/game/images/" + game_id + "/" + page;
+            //location.href = url;
+        }
+    });
+
 }

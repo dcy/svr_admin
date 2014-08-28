@@ -12,7 +12,7 @@ function handle_login()
            function(data){
                result = data.result;
                if (result == "success") {
-                   location.href = "/";
+                   location.reload();
                }
                else if (result == "nameNotExist"){
                    $("#error-text").html("用户名不存在，请向管理员申请");

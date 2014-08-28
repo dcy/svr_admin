@@ -1,5 +1,9 @@
--- 2014-08-27 11:30
+-- 2014-08-28 17:36
 ALTER TABLE `crashes`
-ADD `dump` varchar(160) COLLATE 'utf8_general_ci' NOT NULL COMMENT 'dump' AFTER `stacktrace`,
+ADD `device` varchar(36) NOT NULL COMMENT '设备' AFTER `port`,
+DROP `acc_id`,
+DROP `uid`,
+DROP `stacktrace`,
 COMMENT='';
+
 -- end

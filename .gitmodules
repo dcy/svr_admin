@@ -1,0 +1,3 @@
+[submodule "priv/static/deps/twbs-pagination"]
+	path = priv/static/deps/twbs-pagination
+	url = https://github.com/esimakin/twbs-pagination

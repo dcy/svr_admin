@@ -9,13 +9,12 @@
 {% block myjs %}
   <script src="http://cdn.bootcss.com/bootstrap-modal/2.2.5/js/bootstrap-modal.min.js"></script>
   <script src="http://cdn.bootcss.com/bootstrap-modal/2.2.5/js/bootstrap-modalmanager.min.js"></script>
+  <script src="/static/deps/twbs-pagination/jquery.twbsPagination.min.js"></script>
   <script src="/static/js/manager.js"></script>
   <script src="/static/js/login_modal.js"></script>
-  <script src="/static/js/change_password.js"></script>
   <script>
 $(document).ready(handle_manager);
 $(document).ready(validate_and_login);
-$(document).ready(validate_and_change);
   </script>
 {% endblock %}
 
@@ -31,11 +30,12 @@ $(document).ready(validate_and_change);
             <tr>
               <th>Host</th>
               <th>Port</th>
+              <th>设备</th>
               <th>账户名</th>
               <th>角色名</th>
               <th>时间</th>
               <th>dump</th>
-              <th>堆栈</th>
+              <th>删除</th>
             </tr>
           </thead>
           <tbody>
@@ -43,17 +43,25 @@ $(document).ready(validate_and_change);
             <tr>
               <td>{{ crash.host }}</td>
               <td>{{ crash.port }}</td>
+              <td>{{ crash.device }}</td>
               <td>{{ crash.acc_name }}</td>
               <td>{{ crash.nick }}</td>
               <td>{{ crash.time|date:"Y-m-d H-i-s" }}</td>
               <td width=200 style="WORD-WRAP: break-word"><a href="/static/dump/{{ crash.dump }}" target="_self">{{ crash.dump }}</a></td>
-              <td width=200 style="WORD-WRAP: break-word">{{ crash.stacktrace }}</td>
+              <td>
+                <button class="btn btn-primary btn-xs delete" delete-crash-id={{ crash.id }} data-loading-text="删除中...">删除</button>
+              </td>
             </tr>
           {% endfor %}
           </tbody>
         </table>
       </div>
+      <div id="pageInfo" data-total-pages={{ page_info.total_pages }} data-page-num={{ page_info.page_num }}></div>
+      <div class="text-center">
+        <ul id="pagination" class="pagination-sm"></ul>
+      </div>
     </div>
+    <hr />
     <div class="bg-warning">
       <span><strong>前端post方法:</strong></span>
       <!--
@@ -61,5 +69,8 @@ $(document).ready(validate_and_change);
       -->
       curl -F "dump=@dump_filename" -F host="192.168.1.111" -F port="8000" -F acc_id="1" -F acc_name="name" -F uid="1" -F nick="nick"  -F stacktrace="stacktrace" "http://rtsgame.eicp.net:8008/manager/crash"
     </div>
+    <hr />
+    <!-- Modal -->
+    {% include "account/login_modal.html" %}
   </div>
 {% endblock %}
