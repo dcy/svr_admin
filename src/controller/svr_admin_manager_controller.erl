@@ -76,10 +76,8 @@ crash('POST', []) ->
     Nick = Req:post_param("nick"),
     Dump = case Req:post_files() of
                [] ->
-                   ?TRACE_VAR(empty),
                    "";
                [FileObj] ->
-                   ?TRACE_VAR(FileObj),
                    %%todo: size 太大，忽略
                    #sb_uploaded_file{original_name=OriginalName, temp_file=TempFile} = FileObj,
                    SourceFile = lists:concat(["priv/static/dump/", OriginalName]),
@@ -95,6 +93,10 @@ crash('POST', []) ->
 
 del_crash('POST', []) ->
     CrashId = Req:post_param("crash_id"),
+    Crash = boss_db:find(CrashId),
+    Dump = erlang:binary_to_list(Crash:dump()),
+    DumpFile = lists:concat(["priv/static/dump/", Dump]),
+    file:delete(DumpFile),
     boss_db:delete(CrashId),
     {json, [{result, "success"}]}.
 
