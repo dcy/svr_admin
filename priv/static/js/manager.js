@@ -80,20 +80,22 @@ function handle_manager(){
     var page_num = $('#pageInfo').data('page-num');
 
 
-    $('#pagination').twbsPagination({
-        totalPages: total_pages,
-        visiblePages: 6,
-        startPage: page_num,
-        first: '&laquo;首页',
-        last: '最后&raquo;',
-        prev: '&lsaquo;前一页',
-        next: '后一页&rsaquo;',
-        href: '?page={{number}}',
-        onPageClick: function (event, page) {
-            console.log(page);
-            //url = "/game/images/" + game_id + "/" + page;
-            //location.href = url;
-        }
-    });
+    if ($('#pagination').length > 0) {
+        $('#pagination').twbsPagination({
+            totalPages: total_pages,
+            visiblePages: 6,
+            startPage: page_num,
+            first: '&laquo;首页',
+            last: '最后&raquo;',
+            prev: '&lsaquo;前一页',
+            next: '后一页&rsaquo;',
+            href: '?page={{number}}',
+            onPageClick: function (event, page) {
+                console.log(page);
+                //url = "/game/images/" + game_id + "/" + page;
+                //location.href = url;
+            }
+        });
+    }
 
 }
