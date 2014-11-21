@@ -1,3 +1,6 @@
 [submodule "priv/static/deps/twbs-pagination"]
 	path = priv/static/deps/twbs-pagination
 	url = https://github.com/esimakin/twbs-pagination
+[submodule "priv/static/deps/vex"]
+	path = priv/static/deps/vex
+	url = https://github.com/HubSpot/vex

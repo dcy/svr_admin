@@ -1,10 +1,37 @@
 function handle_manager(){
+
+    vex.dialog.buttons.YES.text = '确定';
+    vex.dialog.buttons.NO.text = '取消';
+
+    function vex_alert_error(what) {
+        var message = '<div class="text-center text-danger">' + what + '</div>';
+        vex.dialog.alert({message: message});
+    }
+
+    function vex_confirm(what, callback) {
+        var message = '<div class="text-center text-danger">' + what + '</div>';
+        vex.dialog.confirm({
+            message: message,
+            callback: callback
+        });
+    }
+
+    function msg_sth(something)
+    {
+        Messenger().post({
+            message: something,
+            showCloseButton: true
+        });
+    }
+
+
     $('button[data-loading-text]').click(function () {
         var btn = $(this).button('loading');
         //setTimeout(function () {
         //    btn.button('reset');
         //}, 3000);
     });
+
 
     is_login = $('#svr-data').data("is_login");
     $("#reload_confs").click(function(){
@@ -16,11 +43,14 @@ function handle_manager(){
                        $('#reload_confs').button('reset');
                        result = data.result;
                        if (result == "serverNotLive"){
-                           $("#errorMsg").html("不能连接服务器, 未开启或者异常!")
+                           vex_alert_error("不能连接服务器，服务器未开启或者异常!");
                        }
                        else if (result == "success"){
-                           $("#errorMsg").html("");
+                           vex_alert_error("成功热更");
                            location.reload();
+                       }
+                       else {
+                           vex_alert_error("数据校验不过: " + result)
                        }
                    }
                   );
@@ -40,11 +70,14 @@ function handle_manager(){
                        $('#reload_svr').button('reset');
                        result = data.result;
                        if (result == "serverNotLive"){
-                           $("#errorMsg").html("不能连接服务器, 未开启或者异常!")
+                           vex_alert_error("不能连接服务器，服务器未开启或者异常!");
                        }
                        else if (result == "success"){
-                           $("#errorMsg").html("");
+                           vex_alert_error("成功热更");
                            location.reload();
+                       }
+                       else {
+                           vex_alert_error("数据校验不过: " + result)
                        }
                    }
                   );

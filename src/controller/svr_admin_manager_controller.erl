@@ -23,7 +23,10 @@ reload_confs('POST', []) ->
                      reload(TheSvrNode, data_confs),
                      History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_CONFS, calendar:local_time()),
                      History:save(),
-                     "success" 
+                     case validate_confs(TheSvrNode) of
+                         ok -> "success";
+                         Other -> Other
+                     end
              end,
     {json, [{result, Result}]}.
 
@@ -41,7 +44,10 @@ reload_svr('POST', []) ->
                      reload(TheSvrNode, all),
                      History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_SVR, calendar:local_time()),
                      History:save(),
-                     "success" 
+                     case validate_confs(TheSvrNode) of
+                         ok -> "success";
+                         Other -> Other
+                     end
              end,
     {json, [{result, Result}]}.
 
@@ -119,6 +125,16 @@ reload(Node, Modules) ->
         false ->
             erlang:error({canNotConnectTheNode, Node})
     end.
+
+validate_confs(Node) ->
+    case net_kernel:connect_node(Node) of
+        true ->
+            rpc:call(Node, lib_validate, validate_datas_for_rpc, []);
+        false ->
+            erlang:error({canNotConnectTheNode, Node})
+    end.
+
+
 
 get_db_id(Id) ->
     [_ModuleName, DbIdStr] = string:tokens(Id, "-"),
