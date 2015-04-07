@@ -47,8 +47,9 @@ function handle_manager(){
                            vex_alert_error("不能连接服务器，服务器未开启或者异常!");
                        }
                        else if (result == "success"){
-                           vex_alert_error("成功热更");
-                           location.reload();
+                           vex_confirm("成功热更", function() {
+                               location.reload();
+                           });
                        }
                        else {
                            vex_alert_error("数据校验不过: " + result)
@@ -75,8 +76,9 @@ function handle_manager(){
                            vex_alert_error("不能连接服务器，服务器未开启或者异常!");
                        }
                        else if (result == "success"){
-                           vex_alert_error("成功热更");
-                           location.reload();
+                           vex_confirm("成功热更", function() {
+                               location.reload();
+                           });
                        }
                        else {
                            vex_alert_error("数据校验不过: " + result)
