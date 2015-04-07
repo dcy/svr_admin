@@ -37,8 +37,9 @@ function handle_manager(){
     $("#reload_confs").click(function(){
         console.log("reload_confs");
         if (is_login){
+            timestamp = new Date().getTime(),
             $.post("/manager/reload_confs",
-                   {},
+                   {time: timestamp},
                    function(data){
                        $('#reload_confs').button('reset');
                        result = data.result;
@@ -64,8 +65,9 @@ function handle_manager(){
 
     $("#reload_svr").click(function(){
         if (is_login){
+            timestamp = new Date().getTime(),
             $.post("/manager/reload_svr",
-                   {},
+                   {time: timestamp},
                    function(data){
                        $('#reload_svr').button('reset');
                        result = data.result;

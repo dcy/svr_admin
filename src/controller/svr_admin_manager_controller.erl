@@ -14,12 +14,13 @@ reload_confs('POST', []) ->
                  false ->
                      "serverNotLive";
                  true ->
-                     {ok, Path} = application:get_env(svr_admin, the_svr_path),
+                     ?TRACE_VAR(application:get_env(boss, the_svr_node)),
+                     {ok, Path} = application:get_env(boss, the_svr_path),
                      SvnUpCmd = lists:concat(["cd ", Path, "; svn up"]),
                      os:cmd(SvnUpCmd),
-                     MakeCmd = lists:concat(["cd ", Path, "; ./rebar compile"]),
+                     MakeCmd = lists:concat(["cd ", Path, "; ./rebar compile skip_deps=true"]),
                      os:cmd(MakeCmd),
-                     {ok, TheSvrNode} = application:get_env(svr_admin, the_svr_node),
+                     {ok, TheSvrNode} = application:get_env(boss, the_svr_node),
                      reload(TheSvrNode, data_confs),
                      History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_CONFS, calendar:local_time()),
                      History:save(),
@@ -35,12 +36,12 @@ reload_svr('POST', []) ->
                  false ->
                      "serverNotLive";
                  true ->
-                     {ok, Path} = application:get_env(svr_admin, the_svr_path),
+                     {ok, Path} = application:get_env(boss, the_svr_path),
                      SvnUpCmd = lists:concat(["cd ", Path, "; svn up"]),
                      os:cmd(SvnUpCmd),
                      MakeCmd = lists:concat(["cd ", Path, "; ./rebar compile"]),
                      os:cmd(MakeCmd),
-                     {ok, TheSvrNode} = application:get_env(svr_admin, the_svr_node),
+                     {ok, TheSvrNode} = application:get_env(boss, the_svr_node),
                      reload(TheSvrNode, all),
                      History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_SVR, calendar:local_time()),
                      History:save(),
@@ -107,7 +108,7 @@ del_crash('POST', []) ->
     {json, [{result, "success"}]}.
 
 is_the_svr_live() ->
-    {ok, TheSvrNode} = application:get_env(svr_admin, the_svr_node),
+    {ok, TheSvrNode} = application:get_env(boss, the_svr_node),
     net_kernel:connect_node(TheSvrNode).
 
 
