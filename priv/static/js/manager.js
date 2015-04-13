@@ -1,7 +1,7 @@
 function handle_manager(){
 
     vex.dialog.buttons.YES.text = '确定';
-    vex.dialog.buttons.NO.text = '取消';
+    vex.dialog.buttons.NO.text = '关闭';
 
     function vex_alert_error(what) {
         var message = '<div class="text-center text-danger">' + what + '</div>';
