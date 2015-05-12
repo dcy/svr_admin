@@ -4,3 +4,6 @@
 [submodule "priv/static/deps/vex"]
 	path = priv/static/deps/vex
 	url = https://github.com/HubSpot/vex
+[submodule "priv/static/deps/AdminLTE"]
+	path = priv/static/deps/AdminLTE
+	url = https://github.com/almasaeed2010/AdminLTE
