@@ -1,4 +1,4 @@
-{% extends "admin_base.html" %}
+{% extends "base.html" %}
 {% block title %}前端崩溃日志{% endblock %}
 
 {% block mycss %}
@@ -19,16 +19,6 @@ $(document).ready(validate_and_login);
 {% endblock %}
 
 {% block content %}
-  <section class="content-header">
-    <h1>
-      客户端崩溃日志
-    </h1>
-    <ol class="breadcrumb">
-      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-      <li class="active">客户端崩溃日志</li>
-    </ol>
-  </section>
-  <hr/>
   <div class="container">
     <div class="panel panel-primary">
       <div class="panel-heading">

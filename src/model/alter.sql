@@ -1,9 +1,4 @@
--- 2014-08-28 17:36
-ALTER TABLE `crashes`
-ADD `device` varchar(36) NOT NULL COMMENT '设备' AFTER `port`,
-DROP `acc_id`,
-DROP `uid`,
-DROP `stacktrace`,
-COMMENT='';
-
+-- 2015-5-13 15:56
+ALTER TABLE `histories`
+ADD `svr_id` int NOT NULL DEFAULT '1' COMMENT '服务器id';
 -- end

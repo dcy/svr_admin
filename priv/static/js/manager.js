@@ -34,11 +34,13 @@ function handle_manager(){
 
 
     is_login = $('#svr-data').data("is_login");
+    cur_svr_id = $('#svr-data').data("svr_id");
+    console.log("cur_svr_id ", cur_svr_id);
     $("#reload_confs").click(function(){
         console.log("reload_confs");
         if (is_login){
             timestamp = new Date().getTime(),
-            $.post("/manager/reload_confs",
+            $.post("/manager/reload_confs/" + cur_svr_id,
                    {time: timestamp},
                    function(data){
                        $('#reload_confs').button('reset');
@@ -67,7 +69,7 @@ function handle_manager(){
     $("#reload_svr").click(function(){
         if (is_login){
             timestamp = new Date().getTime(),
-            $.post("/manager/reload_svr",
+                $.post("/manager/reload_svr/" + cur_svr_id,
                    {time: timestamp},
                    function(data){
                        $('#reload_svr').button('reset');

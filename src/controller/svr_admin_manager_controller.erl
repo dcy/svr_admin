@@ -5,24 +5,38 @@
 -define(CRASHES_PER_PAGE, 10).
 
 list('GET', []) ->
+    Svrs = get_clt_svrs(),
+    ?TRACE_VAR(Svrs),
+    [CurSvr | _] = Svrs, 
     Account = account_lib:is_login_cookie(Req),
-    Histories = get_recent_histories(),
-    {ok, [{account, Account}, {histories, Histories}]}.
+    Histories = get_recent_histories(maps:get(id, CurSvr)),
+    {ok, [{account, Account}, {histories, Histories}, {svrs, Svrs}, {cur_svr, CurSvr}]};
+list('GET', [SvrId]) ->
+    ?TRACE_VAR(SvrId),
+    CurId = erlang:list_to_integer(SvrId),
+    Svrs = get_clt_svrs(),
+    CurSvr = util:mapskeyfind(CurId, id, Svrs),
+    Account = account_lib:is_login_cookie(Req),
+    Histories = get_recent_histories(SvrId),
+    {ok, [{account, Account}, {histories, Histories}, {svrs, Svrs}, {cur_svr, CurSvr}]}.
 
-reload_confs('POST', []) ->
-    Result = case is_the_svr_live() of
+reload_confs('POST', [StrSvrId]) ->
+    SvrId = erlang:list_to_integer(StrSvrId),
+    Result = case is_the_svr_live(SvrId) of
                  false ->
                      "serverNotLive";
                  true ->
-                     ?TRACE_VAR(application:get_env(boss, the_svr_node)),
-                     {ok, Path} = application:get_env(boss, the_svr_path),
+                     Svr = get_svr(SvrId),
+                     #{node:=TheSvrNode, path:=Path} = Svr,
+                     %?TRACE_VAR(application:get_env(boss, the_svr_node)),
+                     %{ok, Path} = application:get_env(boss, the_svr_path),
                      SvnUpCmd = lists:concat(["cd ", Path, "; svn up"]),
                      os:cmd(SvnUpCmd),
                      MakeCmd = lists:concat(["cd ", Path, "; ./rebar compile skip_deps=true"]),
                      os:cmd(MakeCmd),
-                     {ok, TheSvrNode} = application:get_env(boss, the_svr_node),
+                     %{ok, TheSvrNode} = application:get_env(boss, the_svr_node),
                      reload(TheSvrNode, data_confs),
-                     History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_CONFS, calendar:local_time()),
+                     History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_CONFS, calendar:local_time(), SvrId),
                      History:save(),
                      case validate_confs(TheSvrNode) of
                          ok -> "success";
@@ -31,8 +45,9 @@ reload_confs('POST', []) ->
              end,
     {json, [{result, Result}]}.
 
-reload_svr('POST', []) ->
-    Result = case is_the_svr_live() of
+reload_svr('POST', [StrSvrId]) ->
+    SvrId = erlang:list_to_integer(StrSvrId),
+    Result = case is_the_svr_live(SvrId) of
                  false ->
                      "serverNotLive";
                  true ->
@@ -43,7 +58,7 @@ reload_svr('POST', []) ->
                      os:cmd(MakeCmd),
                      {ok, TheSvrNode} = application:get_env(boss, the_svr_node),
                      reload(TheSvrNode, all),
-                     History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_SVR, calendar:local_time()),
+                     History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_SVR, calendar:local_time(), SvrId),
                      History:save(),
                      case validate_confs(TheSvrNode) of
                          ok -> "success";
@@ -73,7 +88,7 @@ crash('GET', []) ->
                       lists:sublist(AllObjs, Start, ?CRASHES_PER_PAGE)
               end,
     PageInfo = [{total_pages, TotalPages}, {page_num, Page}],
-    {ok, [{account, Account}, {crashes, Crashes}, {page_info, PageInfo}]};
+    {ok, [{account, Account}, {crashes, Crashes}, {page_info, PageInfo}, {svrs, get_clt_svrs()}]};
 
 crash('POST', []) ->
     Host = Req:post_param("host"),
@@ -107,8 +122,13 @@ del_crash('POST', []) ->
     boss_db:delete(CrashId),
     {json, [{result, "success"}]}.
 
-is_the_svr_live() ->
-    {ok, TheSvrNode} = application:get_env(boss, the_svr_node),
+%is_the_svr_live() ->
+%    {ok, TheSvrNode} = application:get_env(boss, the_svr_node),
+%    net_kernel:connect_node(TheSvrNode).
+is_the_svr_live(SvrId) ->
+    Svrs = get_svrs(),
+    Svr = util:mapskeyfind(SvrId, id, Svrs),
+    #{node:=TheSvrNode} = Svr,
     net_kernel:connect_node(TheSvrNode).
 
 
@@ -135,15 +155,18 @@ validate_confs(Node) ->
             erlang:error({canNotConnectTheNode, Node})
     end.
 
-
-
 get_db_id(Id) ->
     [_ModuleName, DbIdStr] = string:tokens(Id, "-"),
     erlang:list_to_integer(DbIdStr).
 
-get_recent_histories() ->
-    HistoriesObj = boss_db:find(history, [], [{limit, 20}, {order_by, time}, {descending, true}]),
-    [[{who, History:who()}, {what, get_what(History:what())}, {time, History:time()}] || History <- HistoriesObj].
+%get_recent_histories() ->
+%    HistoriesObj = boss_db:find(history, [], [{limit, 20}, {order_by, time}, {descending, true}]),
+%    %[[{who, History:who()}, {what, get_what(History:what())}, {time, History:time()}] || History <- HistoriesObj].
+%    [#{who=>History:who(), what=>get_what(History:what()), time=>History:time()} || History <- HistoriesObj].
+get_recent_histories(SvrId) ->
+    HistoriesObj = boss_db:find(history, [{svr_id, equals, SvrId}], [{limit, 20}, {order_by, time}, {descending, true}]),
+    %[[{who, History:who()}, {what, get_what(History:what())}, {time, History:time()}] || History <- HistoriesObj].
+    [#{who=>History:who(), what=>get_what(History:what()), time=>History:time()} || History <- HistoriesObj].
 
 get_name(AccountId) ->
     Account = boss_db:find(AccountId),
@@ -155,3 +178,21 @@ get_what(What) ->
         ?MANAGER_RELOAD_SVR -> unicode:characters_to_binary("热更整服");
         ?MANAGER_REBOOT_SVR -> unicode:characters_to_binary("重启服务")
     end.
+
+get_svrs() ->
+    {ok, Svrs} = application:get_env(boss, svrs),
+    Svrs.
+
+get_svr(SvrId) ->
+    Svrs = get_svrs(),
+    util:mapskeyfind(SvrId, id, Svrs).
+
+get_clt_svrs() ->
+    Svrs = get_svrs(),
+    Fun = fun(Svr) ->
+                  #{id:=Id, name:=Name} = Svr,
+                  ?TRACE_VAR({Id, Name}),
+                  #{id=>Id, name=>unicode:characters_to_binary(Name)}
+          end,
+    lists:map(Fun, Svrs).
+

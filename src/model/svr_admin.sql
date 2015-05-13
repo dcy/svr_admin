@@ -34,6 +34,7 @@ CREATE TABLE `histories` (
   `who` varchar(36) NOT NULL COMMENT '谁',
   `what` tinyint(1) NOT NULL COMMENT '干了什么',
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '什么时候',
+  `svr_id` int(11) NOT NULL DEFAULT '1' COMMENT '服务器id',
   PRIMARY KEY (`id`),
   KEY `account_id` (`who`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
