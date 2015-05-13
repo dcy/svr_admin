@@ -51,12 +51,12 @@ reload_svr('POST', [StrSvrId]) ->
                  false ->
                      "serverNotLive";
                  true ->
-                     {ok, Path} = application:get_env(boss, the_svr_path),
+                     Svr = get_svr(SvrId),
+                     #{path:=Path, node:=TheSvrNode} = Svr,
                      SvnUpCmd = lists:concat(["cd ", Path, "; svn up"]),
                      os:cmd(SvnUpCmd),
                      MakeCmd = lists:concat(["cd ", Path, "; ./rebar compile"]),
                      os:cmd(MakeCmd),
-                     {ok, TheSvrNode} = application:get_env(boss, the_svr_node),
                      reload(TheSvrNode, all),
                      History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_SVR, calendar:local_time(), SvrId),
                      History:save(),
