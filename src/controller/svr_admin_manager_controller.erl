@@ -164,7 +164,7 @@ get_db_id(Id) ->
 %    %[[{who, History:who()}, {what, get_what(History:what())}, {time, History:time()}] || History <- HistoriesObj].
 %    [#{who=>History:who(), what=>get_what(History:what()), time=>History:time()} || History <- HistoriesObj].
 get_recent_histories(SvrId) ->
-    HistoriesObj = boss_db:find(history, [{svr_id, equals, SvrId}], [{limit, 20}, {order_by, time}, {descending, true}]),
+    HistoriesObj = boss_db:find(history, [{svr_id, equals, SvrId}], [{limit, 16}, {order_by, time}, {descending, true}]),
     %[[{who, History:who()}, {what, get_what(History:what())}, {time, History:time()}] || History <- HistoriesObj].
     [#{who=>History:who(), what=>get_what(History:what()), time=>History:time()} || History <- HistoriesObj].
 
