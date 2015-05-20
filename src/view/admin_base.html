@@ -137,21 +137,9 @@
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">
             <li class="header">MAIN NAVIGATION</li>
-            <li class="active treeview">
-              <a href="#">
-                <i class="fa fa-dashboard"></i> <span>服务器管理</span> <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                {% for svr in svrs %}
-                  {% ifequal svr.id cur_svr.id %}
-                    <li class="active"><a href="/manager/list/{{ svr.id }}"><i class="fa fa-circle-o"></i>{{ svr.name }}</a></li>
-                  {% else %}
-                    <li><a href="/manager/list/{{ svr.id }}"><i class="fa fa-circle-o"></i>{{ svr.name }}</a></li>
-                  {% endifequal %}
-                {% endfor %}
-              </ul>
-            </li>
+            <li><a href="/"><i class="fa fa-dashboard"></i> 服务器管理</a></li>
             <li><a href="/manager/crash?page=1"><i class="fa fa-warning"></i> 客户端崩溃日志</a></li>
+            <li class="header">MAIN NAVIGATION</li>
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-files-o"></i>

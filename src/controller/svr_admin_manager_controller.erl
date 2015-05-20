@@ -6,19 +6,9 @@
 
 list('GET', []) ->
     Svrs = get_clt_svrs(),
-    ?TRACE_VAR(Svrs),
-    [CurSvr | _] = Svrs, 
     Account = account_lib:is_login_cookie(Req),
-    Histories = get_recent_histories(maps:get(id, CurSvr)),
-    {ok, [{account, Account}, {histories, Histories}, {svrs, Svrs}, {cur_svr, CurSvr}]};
-list('GET', [SvrId]) ->
-    ?TRACE_VAR(SvrId),
-    CurId = erlang:list_to_integer(SvrId),
-    Svrs = get_clt_svrs(),
-    CurSvr = util:mapskeyfind(CurId, id, Svrs),
-    Account = account_lib:is_login_cookie(Req),
-    Histories = get_recent_histories(SvrId),
-    {ok, [{account, Account}, {histories, Histories}, {svrs, Svrs}, {cur_svr, CurSvr}]}.
+    Histories = get_recent_histories(),
+    {ok, [{account, Account}, {histories, Histories}, {svrs, Svrs}]}.
 
 reload_confs('POST', [StrSvrId]) ->
     SvrId = erlang:list_to_integer(StrSvrId),
@@ -28,13 +18,10 @@ reload_confs('POST', [StrSvrId]) ->
                  true ->
                      Svr = get_svr(SvrId),
                      #{node:=TheSvrNode, path:=Path} = Svr,
-                     %?TRACE_VAR(application:get_env(boss, the_svr_node)),
-                     %{ok, Path} = application:get_env(boss, the_svr_path),
                      SvnUpCmd = lists:concat(["cd ", Path, "; svn up"]),
                      os:cmd(SvnUpCmd),
                      MakeCmd = lists:concat(["cd ", Path, "; ./rebar compile skip_deps=true"]),
                      os:cmd(MakeCmd),
-                     %{ok, TheSvrNode} = application:get_env(boss, the_svr_node),
                      reload(TheSvrNode, data_confs),
                      History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RELOAD_CONFS, calendar:local_time(), SvrId),
                      History:save(),
@@ -165,8 +152,11 @@ get_db_id(Id) ->
 %    [#{who=>History:who(), what=>get_what(History:what()), time=>History:time()} || History <- HistoriesObj].
 get_recent_histories(SvrId) ->
     HistoriesObj = boss_db:find(history, [{svr_id, equals, SvrId}], [{limit, 16}, {order_by, time}, {descending, true}]),
-    %[[{who, History:who()}, {what, get_what(History:what())}, {time, History:time()}] || History <- HistoriesObj].
     [#{who=>History:who(), what=>get_what(History:what()), time=>History:time()} || History <- HistoriesObj].
+
+get_recent_histories() ->
+    HistoriesObj = boss_db:find(history, [], [{order_by, time}, {descending, true}, {limit, 16}]),
+    [#{svr_name=>get_svr_name(History:svr_id()), who=>History:who(), what=>get_what(History:what()), time=>History:time()} || History <- HistoriesObj].
 
 get_name(AccountId) ->
     Account = boss_db:find(AccountId),
@@ -179,6 +169,15 @@ get_what(What) ->
         ?MANAGER_REBOOT_SVR -> unicode:characters_to_binary("重启服务")
     end.
 
+get_svr_name(SvrId) ->
+    Svrs = get_clt_svrs(),
+    Svr = util:mapskeyfind(SvrId, id, Svrs),
+    case Svr of
+        undefined -> unicode:characters_to_binary("不存在或已删除");
+        _ -> maps:get(name, Svr)
+    end.
+
+
 get_svrs() ->
     {ok, Svrs} = application:get_env(boss, svrs),
     Svrs.
@@ -190,9 +189,8 @@ get_svr(SvrId) ->
 get_clt_svrs() ->
     Svrs = get_svrs(),
     Fun = fun(Svr) ->
-                  #{id:=Id, name:=Name} = Svr,
-                  ?TRACE_VAR({Id, Name}),
-                  #{id=>Id, name=>unicode:characters_to_binary(Name)}
+                  #{id:=Id, name:=Name, ip:=Ip, port:=Port} = Svr,
+                  #{id=>Id, name=>unicode:characters_to_binary(Name), ip=>Ip, port=>Port, is_live=>is_the_svr_live(Id)}
           end,
     lists:map(Fun, Svrs).
 

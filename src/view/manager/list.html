@@ -13,7 +13,7 @@
 {% block myjs %}
   <script src="http://cdn.bootcss.com/bootstrap-modal/2.2.5/js/bootstrap-modal.min.js"></script>
   <script src="http://cdn.bootcss.com/bootstrap-modal/2.2.5/js/bootstrap-modalmanager.min.js"></script>
-  <script src="/static/js/manager.js?v=1.0"></script>
+  <script src="/static/js/manager.js?v=1.1"></script>
   <script src="/static/js/login_modal.js"></script>
   <script src="/static/js/change_password.js"></script>
   <script>
@@ -27,62 +27,87 @@ $(document).ready(validate_and_change);
   <section class="content-header">
     <h1>
       服务器管理
-      <small class="text-danger"><b>{{ cur_svr.name }}</b></small>
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
       <li class="active">服务器管理</li>
     </ol>
   </section>
-  <hr/>
-  <div class="container content-sep">
-    <div class="col-sm-4">
-      <div class="btn-group-vertical">
-        <button id="reload_confs" class="btn btn-primary" data-loading-text="热更中...">热更配置</button>
-        <button id="reload_svr" class="btn btn-primary" data-loading-text="热更中...">热更整服</button>
-        <button id="reboot_svr" class="btn btn-primary disabled">重启服务器</button>
-      </div>
-    </div>
-    <div class="col-sm-8">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title">最近操作历史</h3>
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">服务器列表<span class="badge">2</span></h3>
+            </div><!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tr>
+                  <th>服务器名</th>
+                  <th>IP</th>
+                  <th>Port</th>
+                  <th>状态</th>
+                  <th>开关服</th>
+                  <th>热更操作</th>
+                </tr>
+                {% for svr in svrs %}
+                  <tr>
+                    <td><span class="text-success">{{ svr.name }}</span></td>
+                    <td>{{ svr.ip }}</td>
+                    <td>{{ svr.port }}</td>
+                    <td>
+                      {% if svr.is_live %}
+                        <span class="text-success"><i class="fa fa-power-off"></i>开启中</span>
+                      {% else %}
+                        <span class="text-muted"><i class="fa fa-power-off"></i>未开启</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if svr.is_live %}
+                        <button class="btn btn-default btn-xs close-svr" svr-id={{ svr.id }}><i class="fa fa-power-off"></i>关服</button>
+                      {% else %}
+                        <button class="btn btn-success btn-xs open-svr" svr-id={{ svr.id }}><i class="fa fa-play"></i>开服</button>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <button class="btn btn-primary btn-xs reload_confs" svr-id={{ svr.id }} data-loading-text="热更中"><i class="fa fa-refresh"></i>配置</button>
+                      <button class="btn btn-primary btn-xs reload_svr" svr-id={{ svr.id }} data-loading-test="热更中"><i class="fa fa-refresh"></i>整服</button>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </table>
+            </div><!-- /.box-body -->
+          </div><!-- /.box -->
         </div>
-        <div class="panel-body">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>谁</th>
-                <th>干什么</th>
-                <th>时间</th>
-              </tr>
-            </thead>
-            <tbody>
-            {% for history in histories %}
-              <tr>
-                <td>{{ history.who }}</td>
-                <td>{{ history.what }}</td>
-                <td>{{ history.time|date:"Y-m-d H-i-s" }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-          <!--
-          <ul class="list-unstyle">
-          {% for history in histories %}
-            <li>
-              <span class="text-primary">{{ history.who }} </span>
-              <span class="text-success">{{ history.time|date:"于Y-m-d H-i-s" }} </span>
-              <span class="text-warning">{{ history.what }}</span>
-            </li>
-          {% endfor %}
-          </ul>
-          -->
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">最近操作历史</h3>
+            </div><!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tr>
+                  <th>谁</th>
+                  <th>哪个服</th>
+                  <th>干什么</th>
+                  <th>时间</th>
+                </tr>
+                {% for history in histories %}
+                  <tr>
+                    <td>{{ history.who }}</td>
+                    <td>{{ history.svr_name }}</td>
+                    <td>{{ history.what }}</td>
+                    <td>{{ history.time|date:"Y-m-d H-i-s" }}</td>
+                  </tr>
+                {% endfor %}
+              </table>
+            </div><!-- /.box-body -->
+          </div><!-- /.box -->
         </div>
       </div>
-    </div>
-    <!-- Modal -->
-    {% include "account/login_modal.html" %}
-    {% include "account/change_password.html" %}
-  </div>
+      {% include "account/login_modal.html" %}
+      {% include "account/change_password.html" %}
+    </section><!-- /.content -->
 {% endblock %}

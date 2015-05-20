@@ -34,16 +34,14 @@ function handle_manager(){
 
 
     is_login = $('#svr-data').data("is_login");
-    cur_svr_id = $('#svr-data').data("svr_id");
-    console.log("cur_svr_id ", cur_svr_id);
-    $("#reload_confs").click(function(){
-        console.log("reload_confs");
+    $(".reload_confs").click(function(){
         if (is_login){
+            var cur_svr_id = $(this).attr('svr-id');
             timestamp = new Date().getTime(),
             $.post("/manager/reload_confs/" + cur_svr_id,
                    {time: timestamp},
                    function(data){
-                       $('#reload_confs').button('reset');
+                       $('.reload_confs').button('reset');
                        result = data.result;
                        if (result == "serverNotLive"){
                            vex_alert_error("不能连接服务器，服务器未开启或者异常!");
@@ -61,18 +59,19 @@ function handle_manager(){
         }
         else{
             console.log("not login");
-            $('#reload_confs').button('reset');
+            $('.reload_confs').button('reset');
             $('#loginModal').modal("toggle");
         }
     });
 
-    $("#reload_svr").click(function(){
+    $(".reload_svr").click(function(){
         if (is_login){
+            var cur_svr_id = $(this).attr('svr-id');
             timestamp = new Date().getTime(),
                 $.post("/manager/reload_svr/" + cur_svr_id,
                    {time: timestamp},
                    function(data){
-                       $('#reload_svr').button('reset');
+                       $('.reload_svr').button('reset');
                        result = data.result;
                        if (result == "serverNotLive"){
                            vex_alert_error("不能连接服务器，服务器未开启或者异常!");
@@ -89,9 +88,19 @@ function handle_manager(){
                   );
         }
         else{
-            $('#reload_svr').button('reset');
+            $('.reload_svr').button('reset');
             $('#loginModal').modal("toggle");
         }
+    });
+
+    $('.open-svr').click(function(){
+        var svr_id = $(this).attr('svr-id');
+        console.log("svr_id: ", svr_id);
+    });
+
+    $('.close-svr').click(function(){
+        var svr_id = $(this).attr('svr-id');
+        console.log("svr_id: ", svr_id);
     });
 
     $('button[delete-crash-id]').click(function () {
