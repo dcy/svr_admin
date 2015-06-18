@@ -47,8 +47,8 @@ $(document).ready(validate_and_change);
                   <th>IP</th>
                   <th>Port</th>
                   <th>状态</th>
-                  <th>开关服</th>
                   <th>热更操作</th>
+                  <th>开关服</th>
                 </tr>
                 {% for svr in svrs %}
                   <tr>
@@ -63,15 +63,15 @@ $(document).ready(validate_and_change);
                       {% endif %}
                     </td>
                     <td>
+                      <button class="btn btn-primary btn-xs reload_confs" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>配置</button>
+                      <button class="btn btn-primary btn-xs reload_svr" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>整服</button>
+                    </td>
+                    <td>
                       {% if svr.is_live %}
                         <button class="btn btn-default btn-xs close-svr" svr-id={{ svr.id }}><i class="fa fa-power-off"></i>关服</button>
                       {% else %}
                         <button class="btn btn-success btn-xs open-svr" svr-id={{ svr.id }}><i class="fa fa-play"></i>开服</button>
                       {% endif %}
-                    </td>
-                    <td>
-                      <button class="btn btn-primary btn-xs reload_confs" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>配置</button>
-                      <button class="btn btn-primary btn-xs reload_svr" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>整服</button>
                     </td>
                   </tr>
                 {% endfor %}
@@ -99,7 +99,7 @@ $(document).ready(validate_and_change);
                     <td>{{ history.who }}</td>
                     <td>{{ history.svr_name }}</td>
                     <td>{{ history.what }}</td>
-                    <td>{{ history.time|date:"Y-m-d H-i-s" }}</td>
+                    <td>{{ history.time|date:"Y-m-d H:i:s" }}</td>
                   </tr>
                 {% endfor %}
               </table>

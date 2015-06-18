@@ -25,3 +25,4 @@
 
 
 {"/", [{controller, "manager"}, {action, "list"}]}.
+{404, [{controller, "pages"}, {action, "lost"}]}.
