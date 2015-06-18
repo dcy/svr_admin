@@ -52,7 +52,7 @@ $(document).ready(validate_and_change);
                 </tr>
                 {% for svr in svrs %}
                   <tr>
-                    <td><span class="badge bg-blue">{{ svr.name }}</span></td>
+                    <td><span class="badge">{{ svr.name }}</span></td>
                     <td>{{ svr.ip }}</td>
                     <td>{{ svr.port }}</td>
                     <td>
@@ -64,7 +64,7 @@ $(document).ready(validate_and_change);
                     </td>
                     <td>
                       <button class="btn btn-primary btn-xs reload_confs" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>配置</button>
-                      <button class="btn btn-primary btn-xs reload_svr" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>整服</button>
+                      <button class="btn btn-warning btn-xs reload_svr" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>整服</button>
                     </td>
                     <td>
                       {% if svr.is_live %}
@@ -96,9 +96,23 @@ $(document).ready(validate_and_change);
                 </tr>
                 {% for history in histories %}
                   <tr>
-                    <td>{{ history.who }}</td>
-                    <td>{{ history.svr_name }}</td>
-                    <td>{{ history.what }}</td>
+                    <td><span class="badge bg-green">{{ history.who }}</span></td>
+                    <td><span class="badge">{{ history.svr_name }}</span></td>
+                    <td>
+                      {% ifequal history.what 1 %}
+                        <span class="badge bg-blue">{{ history.what_str }}</span>
+                      {% else %}
+                        {% ifequal history.what 2 %}
+                          <span class="badge bg-yellow">
+                            {{ history.what_str }}
+                          </span>
+                        {% else %}
+                          <span class="badge bg-red">
+                            {{ history.what_str }}
+                          </span>
+                        {% endifequal %}
+                      {% endifequal %}
+                    </td>
                     <td>{{ history.time|date:"Y-m-d H:i:s" }}</td>
                   </tr>
                 {% endfor %}

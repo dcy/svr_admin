@@ -156,7 +156,7 @@ get_recent_histories(SvrId) ->
 
 get_recent_histories() ->
     HistoriesObj = boss_db:find(history, [], [{order_by, time}, {descending, true}, {limit, 16}]),
-    [#{svr_name=>get_svr_name(History:svr_id()), who=>History:who(), what=>get_what(History:what()), time=>History:time()} || History <- HistoriesObj].
+    [#{svr_name=>get_svr_name(History:svr_id()), who=>History:who(), what=>History:what(), time=>History:time(), what_str=>get_what(History:what())} || History <- HistoriesObj].
 
 get_name(AccountId) ->
     Account = boss_db:find(AccountId),
