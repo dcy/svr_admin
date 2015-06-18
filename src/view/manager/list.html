@@ -26,10 +26,10 @@ $(document).ready(validate_and_change);
 {% block content %}
   <section class="content-header">
     <h1>
-      服务器管理
+      <i class="fa fa-gamepad"></i>服务器管理
     </h1>
     <ol class="breadcrumb">
-      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li><a href="#"><i class="fa fa-gamepad"></i> Home</a></li>
       <li class="active">服务器管理</li>
     </ol>
   </section>
@@ -52,14 +52,14 @@ $(document).ready(validate_and_change);
                 </tr>
                 {% for svr in svrs %}
                   <tr>
-                    <td><span class="text-success">{{ svr.name }}</span></td>
+                    <td><span class="badge bg-blue">{{ svr.name }}</span></td>
                     <td>{{ svr.ip }}</td>
                     <td>{{ svr.port }}</td>
                     <td>
                       {% if svr.is_live %}
-                        <span class="text-success"><i class="fa fa-power-off"></i>开启中</span>
+                        <span class="badge bg-green"><i class="fa fa-play"></i>开启中</span>
                       {% else %}
-                        <span class="text-muted"><i class="fa fa-power-off"></i>未开启</span>
+                        <span class="badge text-muted"><i class="fa fa-power-off"></i>未开启</span>
                       {% endif %}
                     </td>
                     <td>
@@ -70,8 +70,8 @@ $(document).ready(validate_and_change);
                       {% endif %}
                     </td>
                     <td>
-                      <button class="btn btn-primary btn-xs reload_confs" svr-id={{ svr.id }} data-loading-text="热更中"><i class="fa fa-refresh"></i>配置</button>
-                      <button class="btn btn-primary btn-xs reload_svr" svr-id={{ svr.id }} data-loading-test="热更中"><i class="fa fa-refresh"></i>整服</button>
+                      <button class="btn btn-primary btn-xs reload_confs" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>配置</button>
+                      <button class="btn btn-primary btn-xs reload_svr" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>整服</button>
                     </td>
                   </tr>
                 {% endfor %}
