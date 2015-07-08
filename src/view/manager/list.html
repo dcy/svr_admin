@@ -13,7 +13,7 @@
 {% block myjs %}
   <script src="http://cdn.bootcss.com/bootstrap-modal/2.2.5/js/bootstrap-modal.min.js"></script>
   <script src="http://cdn.bootcss.com/bootstrap-modal/2.2.5/js/bootstrap-modalmanager.min.js"></script>
-  <script src="/static/js/manager.js?v=1.1"></script>
+  <script src="/static/js/manager.js?v=1.2"></script>
   <script src="/static/js/login_modal.js"></script>
   <script src="/static/js/change_password.js"></script>
   <script>
@@ -46,8 +46,9 @@ $(document).ready(validate_and_change);
                   <th>服务器名</th>
                   <th>IP</th>
                   <th>Port</th>
+                  <th>LogPort</th>
                   <th>状态</th>
-                  <th>热更操作</th>
+                  <th>操作选项</th>
                   <th>开关服</th>
                 </tr>
                 {% for svr in svrs %}
@@ -55,6 +56,7 @@ $(document).ready(validate_and_change);
                     <td><span class="badge">{{ svr.name }}</span></td>
                     <td>{{ svr.ip }}</td>
                     <td>{{ svr.port }}</td>
+                    <td>{{ svr.log_port }}</td>
                     <td>
                       {% if svr.is_live %}
                         <span class="badge bg-green"><i class="fa fa-play"></i>开启中</span>
@@ -63,8 +65,9 @@ $(document).ready(validate_and_change);
                       {% endif %}
                     </td>
                     <td>
-                      <button class="btn btn-primary btn-xs reload_confs" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>配置</button>
-                      <button class="btn btn-warning btn-xs reload_svr" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>整服</button>
+                      <button class="btn btn-primary btn-xs reload_confs" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>热更配置</button>
+                      <button class="btn btn-warning btn-xs reload_svr" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>热更整服</button>
+                      <button class="btn btn-danger btn-xs reset_svr" svr-id={{ svr.id }} data-loading-text="<i class='fa fa-spinner fa-pulse'></i>清除中"><i class="fa fa-trash"></i>清数据库</button>
                     </td>
                     <td>
                       {% if svr.is_live %}

@@ -40,6 +40,7 @@
 -define(MANAGER_RELOAD_CONFS, 1).
 -define(MANAGER_RELOAD_SVR, 2).
 -define(MANAGER_REBOOT_SVR, 3).
+-define(MANAGER_RESET_SVR, 4).
 
 
 

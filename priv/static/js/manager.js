@@ -93,6 +93,32 @@ function handle_manager(){
         }
     });
 
+    $(".reset_svr").click(function() {
+        if (is_login) {
+            var cur_svr_id = $(this).attr('svr-id');
+            vex_confirm("清除数据库，会删除所有角色及其他数据，确定清除？", function(value) {
+                if (value) {
+                    timestamp = new Date().getTime();
+                    $.post('/manager/reset_svr/' + cur_svr_id,
+                           {time: timestamp},
+                           function(data) {
+                               $('.reset_svr').button('reset');
+                               result = data.result;
+                               if (result == "success") {
+                                   vex_confirm("成功清服", function() {
+                                       location.reload();
+                                   });
+                               }
+                           }
+                          )
+                }
+                else {
+                    $('.reset_svr').button('reset');
+                }
+            })
+        }
+    });
+
     $('.open-svr').click(function(){
         var svr_id = $(this).attr('svr-id');
         console.log("svr_id: ", svr_id);

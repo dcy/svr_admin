@@ -54,6 +54,33 @@ reload_svr('POST', [StrSvrId]) ->
              end,
     {json, [{result, Result}]}.
 
+reset_svr('POST', [StrSvrId]) ->
+    SvrId = erlang:list_to_integer(StrSvrId),
+    Svr = get_svr(SvrId),
+    #{path:=Path, node:=Node} = Svr,
+    case is_the_svr_live(SvrId) of
+        false ->
+            ok;
+        true ->
+            case net_kernel:connect_node(Node) of
+                true ->
+                    rpc:call(Node, xysvr, server_stop, []);
+                false ->
+                    erlang:error({canNotConnectTheNode, Node})
+            end
+    end,
+    DbScriptPath = lists:concat([Path, "db_script"]),
+    InitDbCmd = lists:concat(["cd ", DbScriptPath, "; python init_db.py"]),
+    os:cmd(InitDbCmd),
+    ScriptPath = lists:concat([Path, "script"]),
+    StartSvrCmd = lists:concat(["cd ", ScriptPath, "; python start_daemon_server.py"]),
+    os:cmd(StartSvrCmd),
+    History = history:new(id, get_name(Req:cookie("account_id")), ?MANAGER_RESET_SVR, calendar:local_time(), SvrId),
+    History:save(),
+    {json, [{result, "success"}]}.
+
+
+
 crash('GET', []) ->
     PageStr = case Req:query_param("page") of
                   undefined -> "1";
@@ -166,7 +193,8 @@ get_what(What) ->
     case What of
         ?MANAGER_RELOAD_CONFS -> unicode:characters_to_binary("热更配置");
         ?MANAGER_RELOAD_SVR -> unicode:characters_to_binary("热更整服");
-        ?MANAGER_REBOOT_SVR -> unicode:characters_to_binary("重启服务")
+        ?MANAGER_REBOOT_SVR -> unicode:characters_to_binary("重启服务");
+        ?MANAGER_RESET_SVR -> unicode:characters_to_binary("清数据库")
     end.
 
 get_svr_name(SvrId) ->
@@ -189,8 +217,8 @@ get_svr(SvrId) ->
 get_clt_svrs() ->
     Svrs = get_svrs(),
     Fun = fun(Svr) ->
-                  #{id:=Id, name:=Name, ip:=Ip, port:=Port} = Svr,
-                  #{id=>Id, name=>unicode:characters_to_binary(Name), ip=>Ip, port=>Port, is_live=>is_the_svr_live(Id)}
+                  #{id:=Id, name:=Name, ip:=Ip, port:=Port, log_port:=LogPort} = Svr,
+                  #{id=>Id, name=>unicode:characters_to_binary(Name), ip=>Ip, port=>Port, is_live=>is_the_svr_live(Id), log_port=>LogPort}
           end,
     lists:map(Fun, Svrs).
 
