@@ -117,6 +117,10 @@ function handle_manager(){
                 }
             })
         }
+        else{
+            $('.reset_svr').button('reset');
+            $('#loginModal').modal("toggle");
+        }
     });
 
     $('.open-svr').click(function(){
