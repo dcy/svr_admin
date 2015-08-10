@@ -8,7 +8,8 @@ list('GET', []) ->
     Svrs = get_clt_svrs(),
     Account = account_lib:is_login_cookie(Req),
     Histories = get_recent_histories(),
-    {ok, [{account, Account}, {histories, Histories}, {svrs, Svrs}]}.
+    {ok, [{account, Account}, {histories, Histories},
+          {svrs, [Svr || Svr <- Svrs, maps:get(is_show, Svr) =:= true]}]}.
 
 reload_confs('POST', [StrSvrId]) ->
     SvrId = erlang:list_to_integer(StrSvrId),
@@ -217,8 +218,8 @@ get_svr(SvrId) ->
 get_clt_svrs() ->
     Svrs = get_svrs(),
     Fun = fun(Svr) ->
-                  #{id:=Id, name:=Name, ip:=Ip, port:=Port, log_port:=LogPort} = Svr,
-                  #{id=>Id, name=>unicode:characters_to_binary(Name), ip=>Ip, port=>Port, is_live=>is_the_svr_live(Id), log_port=>LogPort}
+                  #{id:=Id, name:=Name, ip:=Ip, port:=Port, log_port:=LogPort, is_show:=IsShow} = Svr,
+                  #{id=>Id, name=>unicode:characters_to_binary(Name), ip=>Ip, port=>Port, is_live=>is_the_svr_live(Id), log_port=>LogPort, is_show=>IsShow}
           end,
     lists:map(Fun, Svrs).
 
